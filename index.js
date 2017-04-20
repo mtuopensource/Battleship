@@ -59,10 +59,14 @@ function onEventReceived(api, err, message) {
   switch(message.type) {
     case 'message':
 
-      var body = message.body.toLowerCase();
+      var body = message.body.toLowerCase(); //Sanitize input
 
-      if (body.startsWith("/begingame") {
-        
+      if(body.startsWith("/begingame")){
+        var g = new Game();
+        g.isStarted = true;
+        g.opponentID = message.senderID;
+        g.gameID = 17;
+        console.log(g);
       }
 
       insertMessage(message);
