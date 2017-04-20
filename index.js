@@ -41,7 +41,11 @@ function onEventReceived(api, err, message) {
   }
   switch(message.type) {
     case 'message':
-      console.log(message);
+
+      if (message.body.startsWith("/beginGame")) {
+        
+      }
+
       insertMessage(message);
       api.markAsRead(message.threadID, function(err) {
         if(err) {
