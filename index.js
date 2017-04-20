@@ -17,7 +17,7 @@ process.on('exit', function() {
   db.close(); // Cleanup resources we're using and close connections.
 });
 
-// Create simple echo bot
+// Create a bot that logs all messages
 login(loginToken, function callback (err, api) {
   if(err) return console.error(err);
   api.setOptions(options);
@@ -25,19 +25,19 @@ login(loginToken, function callback (err, api) {
       if(err) return console.log(err);
 
       switch(message.type) {
-        case "message":
+        case "message": //If a message is sent to the chat do this:
           api.markAsRead(message.threadID, function(err) {
-            if (err) console.log(err);
+            if (err) console.log(err); //Mark the message as read
           });
-          api.sendMessage(message.body, message.threadID);
-          db.serialize(function() {
+          //api.sendMessage(message.body, message.threadID); //TODO: echo if we want it
+          db.serialize(function() { //Adds all messages sent to the DB
             var stmt = db.prepare("INSERT INTO messages VALUES (?)");
             stmt.run(message.body);
             stmt.finalize();
           });
           console.log(message);
           break;
-        case "event":
+        case "event": //Console.log all events
           console.log(message);
           break;
       }
