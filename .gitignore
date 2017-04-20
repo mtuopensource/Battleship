@@ -6,6 +6,9 @@ npm-debug.log*
 # Environment Variable Files
 *.env
 
+# Database Files
+*.sqlite
+
 # Runtime data
 pids
 *.pid

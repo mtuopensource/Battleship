@@ -1,5 +1,9 @@
-var env   = require('node-env-file');
-var login = require("facebook-chat-api");
+var env     = require('node-env-file');
+var login   = require("facebook-chat-api");
+var sqlite3 = require('sqlite3').verbose();
+
+var db = new sqlite3.Database('games.sqlite');
+
 //This is Isaac's new comment
 env(__dirname + '/secrets.env');
 // Austin was here
@@ -27,3 +31,6 @@ login({email: process.env.fbUser, password: process.env.fbPass}, function callba
       }
   });
 });
+
+
+db.close();
