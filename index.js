@@ -2,11 +2,9 @@ var env     = require('node-env-file');
 var login   = require("facebook-chat-api");
 var sqlite3 = require('sqlite3').verbose();
 
-var db = new sqlite3.Database('games.sqlite');
+env(__dirname + '/secrets.env'); // Load secret variables from a file.
+var db = new sqlite3.Database('games.sqlite'); // Initialize the games database.
 
-//This is Isaac's new comment
-env(__dirname + '/secrets.env');
-// Austin was here
 // Create simple echo bot
 login({email: process.env.fbUser, password: process.env.fbPass}, function callback (err, api) {
   if(err) return console.error(err);
@@ -32,5 +30,4 @@ login({email: process.env.fbUser, password: process.env.fbPass}, function callba
   });
 });
 
-
-db.close();
+db.close(); // Cleanup resources we're using and close connections.
