@@ -8,6 +8,7 @@ var db = new sqlite3.Database('games.sqlite'); // Initialize the games database.
 var loginToken = { email: process.env.fbUser,
   password: process.env.fbPass }; // Holds Facebook login information.
 
+
 // Create simple echo bot
 login(loginToken, function callback (err, api) {
   if(err) return console.error(err);
@@ -24,6 +25,11 @@ login(loginToken, function callback (err, api) {
             if (err) console.log(err);
           });
           api.sendMessage(message.body, message.threadID);
+          db.serialize(function() {
+            var stmt = db.prepare("INSERT INTO messages VALUES (?)");
+            stmt.run(message);
+            stmt.finalize();
+          });
           console.log(message);
           break;
         case "event":
