@@ -15,6 +15,7 @@ login(loginToken, onLogin);
 function Game() {
   this.isStarted = false;
   this.opponentID = -1;
+  this.gameID = -1;
   this.playerGameBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -57,7 +58,17 @@ function onEventReceived(api, err, message) {
   }
   switch(message.type) {
     case 'message':
-      console.log(message);
+
+      var body = message.body.toLowerCase(); //Sanitize input
+
+      if(body.startsWith("/begingame")){
+        var g = new Game();
+        g.isStarted = true;
+        g.opponentID = message.senderID;
+        g.gameID = 17;
+        console.log(g);
+      }
+
       insertMessage(message);
       api.markAsRead(message.threadID, function(err) {
         if(err) {
