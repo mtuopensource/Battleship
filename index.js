@@ -29,7 +29,7 @@ login(loginToken, function callback (err, api) {
           });
           //api.sendMessage(message.body, message.threadID); //TODO: echo if we want it
           db.serialize(function() { //Adds all messages sent to the DB
-            var stmt = db.prepare("INSERT INTO messages (threadID, messageID, body) VALUES (?)");
+            var stmt = db.prepare("INSERT INTO messages (threadID, messageID, body) VALUES (?, ?, ?)");
             stmt.run(message.threadID, message.messageID, message.body);
             stmt.finalize();
           });
