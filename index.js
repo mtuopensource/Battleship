@@ -12,6 +12,10 @@ var loginToken = { email: process.env.fbUser,
 var options = { listenEvents: true,
   selfListen: false }; // Holds Facebook chat options.
 
+process.on('exit', function() {
+  console.log('Goodbye!');
+  db.close(); // Cleanup resources we're using and close connections.
+});
 
 // Create simple echo bot
 login(loginToken, function callback (err, api) {
@@ -39,5 +43,3 @@ login(loginToken, function callback (err, api) {
       }
   });
 });
-
-db.close(); // Cleanup resources we're using and close connections.
