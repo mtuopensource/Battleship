@@ -15,6 +15,7 @@ login(loginToken, onLogin);
 function Game() {
   this.isStarted = false;
   this.opponentID = -1;
+  this.gameID = -1;
   this.playerGameBoard = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -58,7 +59,9 @@ function onEventReceived(api, err, message) {
   switch(message.type) {
     case 'message':
 
-      if (message.body.startsWith("/beginGame")) {
+      var body = message.body.toLowerCase();
+
+      if (body.startsWith("/begingame") {
         
       }
 
