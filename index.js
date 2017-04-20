@@ -32,7 +32,7 @@ login(loginToken, function callback (err, api) {
           api.sendMessage(message.body, message.threadID);
           db.serialize(function() {
             var stmt = db.prepare("INSERT INTO messages VALUES (?)");
-            stmt.run(message);
+            stmt.run(message.body);
             stmt.finalize();
           });
           console.log(message);
