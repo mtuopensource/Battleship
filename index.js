@@ -7,14 +7,13 @@ env(__dirname + '/secrets.env'); // Load secret variables from a file.
 var db = new sqlite3.Database('games.sqlite'); // Initialize the games database.
 var loginToken = { email: process.env.fbUser,
   password: process.env.fbPass }; // Holds Facebook login information.
+var options = { listenEvents: true,
+  selfListen: false }; // Holds Facebook chat options.
 
 // Create simple echo bot
 login(loginToken, function callback (err, api) {
   if(err) return console.error(err);
-
-  api.setOptions({listenEvents: true});
-  api.setOptions({selfListen: false});
-
+  api.setOptions(options);
   api.listen(function callback(err, message) {
       if(err) return console.log(err);
 
