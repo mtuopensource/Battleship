@@ -31,37 +31,7 @@ Game.prototype.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
-  this.Carrier = false;
-  this.Battleship = false;
-  this.Cruiser = false;
-  this.Submarine = false;
-  this.Destroyer = false;
-
-  do {
-    this.api.sendMessage('Please place your Carrier.', this.threadID);
-    this.api.listen(function callback(err, message) {
-      if(err) {
-        return console.log(err);
-      }
-        switch(message.type) {
-          case 'message':
-            this.messageSplit = message.body.split(" ");
-            if (this.messageSplit[1] == "horizontal") {
-              if(addShip(this.playerGameBoard, 5, this.messageSplit[0].charAt(0), this.messageSplit.charAt(1), false)) {
-                this.Carrier = true;
-              }
-            } else if(this.messageSplit[1] == "vertical") {
-              if(addShip(this.playerGameBoard, 5, this.messageSplit[0].charAt(0), this.messageSplit.charAt(1), true)) {
-                this.Carrier = true;
-              }
-            }
-            break;
-          case 'event':
-            console.log(message.body);
-            break;
-      }
-    });
-  } while(this.Carrier == false);
+  this.api.sendMessage('Please place your ships.', this.threadID);
 }
 
 Game.prototype.addComputerShip = function(shipLength) {
@@ -187,14 +157,6 @@ function createGameBoard() {
   return x;
 }
 
-function sendBoard(gameBoard, api, threadID) {
-  var board = '';
-  for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
-    board = board.concat(gameBoard[i] + '\r\n');
-  }
-  api.sendMessage(board, threadID);
-}
-
 /**
  * [onLogin description]
  * @param  {[type]} err [description]
@@ -235,8 +197,7 @@ function onEventReceived(api, err, message) {
         g.threadID = message.threadID;
         g.api = api;
         g.beginGame();
-        api.sendMessage("GameID: " + g.gameID, message.threadID);
-        sendBoard(g.playerGameBoard, api, message.threadID);
+        api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
         console.log(g);
       } else if(body.startsWith("/help")) {
         api.sendMessage('The command "/begingame" will start your battleship game!', message.threadID);
