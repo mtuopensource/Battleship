@@ -186,4 +186,16 @@ Game.prototype.messageReceive = function(message) {
   }
 };
 
+/**
+ * Sends a copy of the given board to the Facebook thread.
+ * @param Object The board to send.
+ */
+Game.prototype.sendBoard(gameBoard) {
+  var board = '';
+  for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
+    board = board.concat(gameBoard[i] + '\r\n'); // Check row by row.
+  }
+  api.sendMessage(board, threadID);
+}
+
 module.exports = Game;
