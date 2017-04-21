@@ -15,6 +15,8 @@ var loginPrefs = { listenEvents: true, selfListen: false }; // Holds Facebook ch
 
 login(loginToken, onLogin);
 
+var games = {};
+
 function Game() {
   this.isStarted = false;
   this.opponentID = -1;
@@ -23,6 +25,7 @@ function Game() {
   this.playerGameBoard = createGameBoard();
   this.computerGameBoard = createGameBoard();
   this.api = null;
+  this.carrier = false;
 }
 
 Game.prototype.beginGame = function() {
@@ -31,8 +34,19 @@ Game.prototype.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
-  this.api.sendMessage('Please place your ships.', this.threadID);
-}
+  this.api.sendMessage('Please place your carrier.', this.threadID);
+};
+
+Game.prototype.messageReceive = function(message) {
+  var messageSplit = message.split(" ");
+  var x = parseInt(messageSplit[0].charAt(0));
+  var y = parseInt(messageSplit[0].charAt(1));
+  var o = messageSplit[1];
+  if(!this.carrier) {
+    this.carrier = addShip(this.playerGameBoard, 5, x, y, o === "vertical");
+  }
+  console.log(this.playerGameBoard);
+};
 
 Game.prototype.addComputerShip = function(shipLength) {
   var added = false;
@@ -199,8 +213,12 @@ function onEventReceived(api, err, message) {
         g.beginGame();
         api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
         console.log(g);
+        games[message.senderID] = g;
       } else if(body.startsWith("/help")) {
         api.sendMessage('The command "/begingame" will start your battleship game!', message.threadID);
+      } else {
+        var g = games[message.senderID];
+        g.messageReceive(message.body);
       }
 
       insertMessage(message);
