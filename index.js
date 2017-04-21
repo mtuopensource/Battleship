@@ -64,10 +64,10 @@ Game.prototype.addComputerShip = function(shipLength) {
 
 /**
  * Checks if  (x, y) is valid for a ship of length shipLength.
- * @param  Integer gameBoard  The board which will be checked.
- * @param  Integer shipLength The length of the ship to be added.
- * @param  Integer x          X coordinate of the ship.
- * @param  Integer y          Y coordinate of the ship.
+ * @param  Number gameBoard  The board which will be checked.
+ * @param  Number shipLength The length of the ship to be added.
+ * @param  Number x          X coordinate of the ship.
+ * @param  Number y          Y coordinate of the ship.
  * @return Boolean            True if the position is valid.
  */
 function checkShipX(gameBoard, shipLength, x, y) {
@@ -82,10 +82,10 @@ function checkShipX(gameBoard, shipLength, x, y) {
 
 /**
  * Adds a ship to the gameBoard at (x, y) in a horizontal orientation.
- * @param Integer gameBoard  The board to add the ship to.
- * @param Integer shipLength The length of the ship.
- * @param Integer x          X coordinate of the ship.
- * @param Integer y          Y coordinate of the ship.
+ * @param Number gameBoard  The board to add the ship to.
+ * @param Number shipLength The length of the ship.
+ * @param Number x          X coordinate of the ship.
+ * @param Number y          Y coordinate of the ship.
  */
 function addShipX(gameBoard, shipLength, x, y) {
   for(var i = 0; i < shipLength; i++) {
@@ -95,10 +95,10 @@ function addShipX(gameBoard, shipLength, x, y) {
 
 /**
  * Checks if  (x, y) is valid for a ship of length shipLength.
- * @param  Integer gameBoard  The board which will be checked.
- * @param  Integer shipLength The length of the ship to be added.
- * @param  Integer x          X coordinate of the ship.
- * @param  Integer y          Y coordinate of the ship.
+ * @param  Number gameBoard  The board which will be checked.
+ * @param  Number shipLength The length of the ship to be added.
+ * @param  Number x          X coordinate of the ship.
+ * @param  Number y          Y coordinate of the ship.
  * @return Boolean            True if the position is valid.
  */
 function checkShipY(gameBoard, shipLength, x, y) {
@@ -113,10 +113,10 @@ function checkShipY(gameBoard, shipLength, x, y) {
 
 /**
  * Adds a ship to the gameBoard at (x, y) in a vertical orientation.
- * @param Integer gameBoard  The board to add the ship to.
- * @param Integer shipLength The length of the ship.
- * @param Integer x          X coordinate of the ship.
- * @param Integer y          Y coordinate of the ship.
+ * @param Number gameBoard  The board to add the ship to.
+ * @param Number shipLength The length of the ship.
+ * @param Number x          X coordinate of the ship.
+ * @param Number y          Y coordinate of the ship.
  */
 function addShipY(gameBoard, shipLength, x, y) {
   for(var i = 0; i < shipLength; i++) {
@@ -126,10 +126,10 @@ function addShipY(gameBoard, shipLength, x, y) {
 
 /**
  * Adds a ship to gameBoard at (x, y), if the position is valid.
- * @param  Integer gameBoard  The board to add the ship to.
- * @param  Integer shipLength The length of the ship.
- * @param  Integer x          X coordinate of the ship.
- * @param  Integer y          Y coordinate of the ship.
+ * @param  Number gameBoard  The board to add the ship to.
+ * @param  Number shipLength The length of the ship.
+ * @param  Number x          X coordinate of the ship.
+ * @param  Number y          Y coordinate of the ship.
  * @param  Boolean vertical   If true, ship is placed vertically, horizontal otherwise.
  * @return Boolean            True if the ship was placed, false otherwise.
  */
@@ -151,9 +151,9 @@ function addShip(gameBoard, shipLength, x, y, vertical) {
 
 /**
  * Returns a random integer between min and max.
- * @param  Integer min The lower bound of possible integers.
- * @param  Integer max The upper bound of possible integers.
- * @return Integer     A random integer between min and max.
+ * @param  Number min The lower bound of possible integers.
+ * @param  Number max The upper bound of possible integers.
+ * @return Number     A random integer between min and max.
  */
 function getRandomInt(min, max) {
   return Math.round(Math.random() * (max - min) + min);
