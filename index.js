@@ -1,21 +1,21 @@
 var Constants = require('./constants.js');
-var env     = require('node-env-file');
-var login   = require("facebook-chat-api");
-var sqlite3 = require('sqlite3').verbose();
+var Sqlite3   = require('sqlite3').verbose();
+var env       = require('node-env-file');
+var login     = require("facebook-chat-api");
 
 console.log('Game Board Size: ' + Constants.GAME_BOARD_SIZE);
 console.log('Preferences File: ' + Constants.FILE_PREFS);
 console.log('Database: ' + Constants.FILE_DB);
+console.log("Ships: " + JSON.stringify(Constants.SHIPS));
 
 env(__dirname + Constants.FILE_PREFS); // Load user preferences from a file.
 
-var db = new sqlite3.Database(Constants.FILE_DB); // Initialize the games database.
-var loginToken = { email: process.env.fbUser, password: process.env.fbPass }; // Holds Facebook login information.
-var loginPrefs = { listenEvents: true, selfListen: false }; // Holds Facebook chat options.
+var db    = new Sqlite3.Database(Constants.FILE_DB); // Load the games database from a file.
+var token = { email: process.env.fbUser, password: process.env.fbPass }; // Facebook login information.
+var prefs = { listenEvents: true, selfListen: false }; // Chat options
+var games = { }; // A dictionary relating user id to game.
 
-login(loginToken, onLogin);
-
-var games = {};
+login(loginToken, onLogin); // Create a connection to Facebook.
 
 function Game() {
   this.isStarted = false;
