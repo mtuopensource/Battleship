@@ -43,7 +43,7 @@ Game.prototype.messageReceive = function(message) {
   var y = parseInt(messageSplit[0].charAt(1));
   var o = messageSplit[1];
   if(!this.carrier) {
-    this.carrier = addShip(this.playerGameBoard, 5, x, y, o === "vertical");
+    this.carrier = addShip(this.playerGameBoard, 5, x, y, o == "vertical");
   }
   console.log(this.playerGameBoard);
 };
@@ -87,7 +87,7 @@ function checkShipX(gameBoard, shipLength, x, y) {
  */
 function addShipX(gameBoard, shipLength, x, y) {
   for(var i = 0; i < shipLength; i++) {
-    gameBoard[x + i][y] = shipLength;
+    gameBoard[x][y + i] = shipLength;
   }
 }
 
@@ -119,7 +119,7 @@ function checkShipY(gameBoard, shipLength, x, y) {
  */
 function addShipY(gameBoard, shipLength, x, y) {
   for(var i = 0; i < shipLength; i++) {
-    gameBoard[x][y + i] = shipLength;
+    gameBoard[x + i][y] = shipLength;
   }
 }
 
