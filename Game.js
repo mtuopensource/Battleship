@@ -151,6 +151,7 @@ Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
     if(next) {
       this.fbAPI.sendMessage('Please place your ' + next + '.', this.fbThreadID); // Successful, prompt for next.
     } else {
+      this.sendBoard(this.gameBoard);
       this.fbAPI.sendMessage('You go first!', this.fbThreadID); // Successful, game can start now.
       this.isStarted = true;
     }
@@ -190,12 +191,12 @@ Game.prototype.messageReceive = function(message) {
  * Sends a copy of the given board to the Facebook thread.
  * @param Object The board to send.
  */
-Game.prototype.sendBoard(gameBoard) {
+Game.prototype.sendBoard = function(gameBoard) {
   var board = '';
   for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
     board = board.concat(gameBoard[i] + '\r\n'); // Check row by row.
   }
-  api.sendMessage(board, threadID);
-}
+  this.fbAPI.sendMessage(board, this.fbThreadID);
+};
 
 module.exports = Game;
