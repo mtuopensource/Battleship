@@ -9,7 +9,7 @@ var loginToken = { email: process.env.fbUser,
   password: process.env.fbPass }; // Holds Facebook login information.
 var loginPrefs = { listenEvents: true,
     selfListen: false }; // Holds Facebook chat options.
-
+    
 login(loginToken, onLogin);
 
 function Game() {
@@ -27,7 +27,8 @@ function Game() {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
   this.computerGameBoard = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,7 +39,75 @@ function Game() {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+}
+
+Game.prototype.beginGame = function() {
+  var gameBoard = this.computerGameBoard;
+  addShip(gameBoard, 5);
+  addShip(gameBoard, 4);
+  addShip(gameBoard, 3);
+  addShip(gameBoard, 3);
+  addShip(gameBoard, 2);
+}
+
+function addShip(board, shipLength) {
+  var placing = true;
+  while(placing) {
+    var x = getRandomInt(0, 9);
+    var y = getRandomInt(0, 9);
+    var vertical = getRandomInt(0, 1) == 1;
+    if(vertical) {
+      var invalid = false;
+      for(var i = 0; i < shipLength; i++) {
+        if(y + i > 9) {
+          invalid = true;
+          break;
+        }
+        if(board[x][y + i] > 0) {
+          invalid = true;
+          break;
+        }
+      }
+      if(invalid) {
+        continue;
+      }
+      for(var i = 0; i < shipLength; i++) {
+        board[x][y + i] = shipLength;
+      }
+      placing = false;
+    } else {
+      var invalid = false;
+      for(var i = 0; i < shipLength; i++) {
+        if(x + i > 9) {
+          invalid = true;
+          break;
+        }
+        if(board[x + i][y] > 0) {
+          invalid = true;
+          break;
+        }
+      }
+      if(invalid) {
+        continue;
+      }
+      for(var i = 0; i < shipLength; i++) {
+        board[x + i][y] = shipLength;
+      }
+      placing = false;
+    }
+  }
+}
+
+/**
+ * [getRandomInt description]
+ * @param  {[type]} min [description]
+ * @param  {[type]} max [description]
+ * @return {[type]}     [description]
+ */
+function getRandomInt(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
 }
 
 /**
@@ -79,8 +148,14 @@ function onEventReceived(api, err, message) {
         g.opponentID = message.senderID;
         g.gameID = 17;
         g.threadID = message.threadID;
+<<<<<<< HEAD
 
         api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
+=======
+        g.beginGame();
+        api.sendMessage("Your game ID is " + g.gameID + " and your bored looks like " + g.playerGameBoard, message.threadID);
+        api.sendMessage("Computer game board looks like" + g.computerGameBoard , message.threadID);
+>>>>>>> 8219766b93b7e5aa1a508815cd9bb629b5f2b701
         console.log(g);
       }
 
