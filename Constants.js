@@ -9,7 +9,7 @@ module.exports = {
     "Submarine": 3,
     "Destroyer": 2
   },
-  COMMAND_BEGIN: '/begin',
+  COMMAND_BEGIN: '/begingame',
   COMMAND_HELP: '/help',
   MESSAGE_HELP: 'The command "/begingame" will start your battleship game!'
 };
