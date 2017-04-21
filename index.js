@@ -3,15 +3,15 @@ var env     = require('node-env-file');
 var login   = require("facebook-chat-api");
 var sqlite3 = require('sqlite3').verbose();
 
+console.log('Game Board Size: ' + Constants.GAME_BOARD_SIZE);
+console.log('Preferences File: ' + Constants.FILE_PREFS);
+console.log('Database: ' + Constants.FILE_DB);
+
 env(__dirname + Constants.FILE_PREFS); // Load user preferences from a file.
 
 var db = new sqlite3.Database(Constants.FILE_DB); // Initialize the games database.
 var loginToken = { email: process.env.fbUser, password: process.env.fbPass }; // Holds Facebook login information.
 var loginPrefs = { listenEvents: true, selfListen: false }; // Holds Facebook chat options.
-
-console.log('Game Board Size: ' + Constants.GAME_BOARD_SIZE);
-console.log('Preferences File: ' + Constants.FILE_PREFS);
-console.log('Database: ' + Constants.FILE_DB);
 
 login(loginToken, onLogin);
 
