@@ -47,11 +47,11 @@ Game.prototype.beginGame = function() {
           case 'message':
             this.messageSplit = message.body.split(" ");
             if (this.messageSplit[1] == "horizontal") {
-              if(addShip(this.gameBoard, 5, this.messageSplit.charAt(0), this.messageSplit.charAt(1), false)) {
+              if(addShip(this.playerGameBoard, 5, this.messageSplit[0].charAt(0), this.messageSplit.charAt(1), false)) {
                 this.Carrier = true;
               }
             } else if(this.messageSplit[1] == "vertical") {
-              if(addShip(this.gameBoard, 5, this.messageSplit.charAt(0), this.messageSplit.charAt(1), true)) {
+              if(addShip(this.playerGameBoard, 5, this.messageSplit[0].charAt(0), this.messageSplit.charAt(1), true)) {
                 this.Carrier = true;
               }
             }
