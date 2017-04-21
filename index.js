@@ -26,6 +26,10 @@ function Game() {
   this.computerGameBoard = createGameBoard();
   this.api = null;
   this.carrier = false;
+  this.battleship = false;
+  this.cruiser = false;
+  this.submarine = false;
+  this.destroyer = false;
 }
 
 Game.prototype.beginGame = function() {
@@ -37,15 +41,41 @@ Game.prototype.beginGame = function() {
   this.api.sendMessage('Please place your carrier.', this.threadID);
 };
 
+
+Game.prototype.tryPlaceShip = function(x, y, orientation, length, name, next) {
+  var ship = addShip(this.playerGameBoard, length, x, y, orientation);
+  if(ship) {
+    if(next) {
+      this.api.sendMessage('Please place your ' + next + '.', this.threadID);
+    } else {
+      this.api.sendMessage('You go first!', this.threadID);
+      this.isStarted = true;
+    }
+  } else {
+    this.api.sendMessage('Invalid coordinates, please place your ' + name + '.', this.threadID);
+  }
+  return ship;
+}
+
+
 Game.prototype.messageReceive = function(message) {
   var messageSplit = message.split(" ");
   var x = parseInt(messageSplit[0].charAt(0));
   var y = parseInt(messageSplit[0].charAt(1));
-  var o = messageSplit[1];
+  var o = messageSplit[1] == "vertical";
+
   if(!this.carrier) {
-    this.carrier = addShip(this.playerGameBoard, 5, x, y, o == "vertical");
+    this.carrier = this.tryPlaceShip(x, y, o, 5, 'carrier', 'battleship');
+  } else if(!this.battleship) {
+    this.battleship = this.tryPlaceShip(x, y, o, 4, 'battleship', 'cruiser');
+  } else if(!this.cruiser) {
+    this.cruiser = this.tryPlaceShip(x, y, o, 3, 'cruiser', 'submarine');
+  } else if(!this.submarine) {
+    this.submarine = this.tryPlaceShip(x, y, o, 3, 'submarine', 'destroyer');
+  } else if(!this.destroyer) {
+    this.destroyer = this.tryPlaceShip(x, y, o, 2, 'destroyer', '');
+    console.log(this.playerGameBoard);
   }
-  console.log(this.playerGameBoard);
 };
 
 Game.prototype.addComputerShip = function(shipLength) {
@@ -71,7 +101,7 @@ function checkShipX(gameBoard, shipLength, x, y) {
   var valid = true;
   var max = Constants.GAME_BOARD_SIZE - 1;
   for(var i = 0; i < shipLength; i++) {
-    if(x + i > max || gameBoard[x + i][y] > 0) {
+    if(y + i > max || gameBoard[x][y + i] > 0) {
       valid = false; // Position out of bounds or intersects another ship.
     }
   }
@@ -103,7 +133,7 @@ function checkShipY(gameBoard, shipLength, x, y) {
   var valid = true;
   var max = Constants.GAME_BOARD_SIZE - 1;
   for(var i = 0; i < shipLength; i++) {
-    if(y + i > max || gameBoard[x][y + i] > 0) {
+    if(x + i > max || gameBoard[x + i][y] > 0) {
       valid = false; // Position out of bounds or intersects another ship.
     }
   }
@@ -205,14 +235,14 @@ function onEventReceived(api, err, message) {
 
       if(body.startsWith("/begingame")){
         var g = new Game();
-        g.isStarted = true;
+        g.isStarted = false;
         g.opponentID = message.senderID;
         g.gameID = 17;
         g.threadID = message.threadID;
         g.api = api;
         g.beginGame();
-        api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
-        console.log(g);
+        //api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
+
         games[message.senderID] = g;
       } else if(body.startsWith("/help")) {
         api.sendMessage('The command "/begingame" will start your battleship game!', message.threadID);
