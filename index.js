@@ -9,7 +9,7 @@ var loginToken = { email: process.env.fbUser,
   password: process.env.fbPass }; // Holds Facebook login information.
 var loginPrefs = { listenEvents: true,
     selfListen: false }; // Holds Facebook chat options.
-    
+
 login(loginToken, onLogin);
 
 function Game() {
@@ -150,7 +150,6 @@ function onEventReceived(api, err, message) {
         g.threadID = message.threadID;
         g.beginGame();
         api.sendMessage("Your game ID is " + g.gameID + " and your bored looks like " + g.playerGameBoard, message.threadID);
-        api.sendMessage("Computer game board looks like" + g.computerGameBoard , message.threadID);
         console.log(g);
       }
 
