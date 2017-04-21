@@ -197,7 +197,7 @@ function onEventReceived(api, err, message) {
         api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
         console.log(g);
       } else if(body.startsWith("/help")) {
-        api.sendMessage('The command "/begingame" will start your battleship game!');
+        api.sendMessage('The command "/begingame" will start your battleship game!', message.threadID);
       }
 
       insertMessage(message);
