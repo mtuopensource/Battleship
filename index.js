@@ -31,6 +31,7 @@ Game.prototype.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
+  this.api.sendMessage('Please place your ships.', this.threadID);
 }
 
 Game.prototype.addComputerShip = function(shipLength) {
