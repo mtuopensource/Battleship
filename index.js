@@ -22,6 +22,7 @@ function Game() {
   this.threadID = -1;
   this.playerGameBoard = createGameBoard();
   this.computerGameBoard = createGameBoard();
+  this.api = null;
 }
 
 Game.prototype.beginGame = function() {
@@ -193,6 +194,7 @@ function onEventReceived(api, err, message) {
         g.opponentID = message.senderID;
         g.gameID = 17;
         g.threadID = message.threadID;
+        g.api = api;
         g.beginGame();
         api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
         console.log(g);
