@@ -31,7 +31,37 @@ Game.prototype.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
-  this.api.sendMessage('Please place your ships.', this.threadID);
+  this.Carrier = false;
+  this.Battleship = false;
+  this.Cruiser = false;
+  this.Submarine = false;
+  this.Destroyer = false;
+
+  do {
+    this.api.sendMessage('Please place your Carrier.', this.threadID);
+    this.api.listen(function callback(err, message) {
+      if(err) {
+        return console.log(err);
+      }
+        switch(message.type) {
+          case 'message':
+            this.messageSplit = message.body.split(" ");
+            if (this.messageSplit[1] == "horizontal") {
+              if(addShip(this.gameBoard, 5, this.messageSplit.charAt(0), this.messageSplit.charAt(1), false)) {
+                this.Carrier = true;
+              }
+            } else if(this.messageSplit[1] == "vertical") {
+              if(addShip(this.gameBoard, 5, this.messageSplit.charAt(0), this.messageSplit.charAt(1), true)) {
+                this.Carrier = true;
+              }
+            }
+            break;
+          case 'event':
+            console.log(message.body);
+            break;
+      }
+    });
+  } while(this.Carrier == false);
 }
 
 Game.prototype.addComputerShip = function(shipLength) {
