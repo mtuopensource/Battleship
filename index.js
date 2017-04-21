@@ -157,6 +157,14 @@ function createGameBoard() {
   return x;
 }
 
+function sendBoard(gameBoard, api, threadID) {
+  var board = '';
+  for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
+    board = board.concat(gameBoard[i] + '\r\n');
+  }
+  api.sendMessage(board, threadID);
+}
+
 /**
  * [onLogin description]
  * @param  {[type]} err [description]
@@ -197,7 +205,8 @@ function onEventReceived(api, err, message) {
         g.threadID = message.threadID;
         g.api = api;
         g.beginGame();
-        api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
+        api.sendMessage("GameID: " + g.gameID, message.threadID);
+        sendBoard(g.playerGameBoard, api, message.threadID);
         console.log(g);
       } else if(body.startsWith("/help")) {
         api.sendMessage('The command "/begingame" will start your battleship game!', message.threadID);
