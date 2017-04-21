@@ -68,7 +68,7 @@ Game.prototype.addComputerShip = function(shipLength) {
  * @param  Number shipLength The length of the ship to be added.
  * @param  Number x          X coordinate of the ship.
  * @param  Number y          Y coordinate of the ship.
- * @return Boolean            True if the position is valid.
+ * @return Boolean           True if the position is valid.
  */
 function checkShipX(gameBoard, shipLength, x, y) {
   var valid = true;
@@ -99,7 +99,7 @@ function addShipX(gameBoard, shipLength, x, y) {
  * @param  Number shipLength The length of the ship to be added.
  * @param  Number x          X coordinate of the ship.
  * @param  Number y          Y coordinate of the ship.
- * @return Boolean            True if the position is valid.
+ * @return Boolean           True if the position is valid.
  */
 function checkShipY(gameBoard, shipLength, x, y) {
   var valid = true;
@@ -130,8 +130,8 @@ function addShipY(gameBoard, shipLength, x, y) {
  * @param  Number shipLength The length of the ship.
  * @param  Number x          X coordinate of the ship.
  * @param  Number y          Y coordinate of the ship.
- * @param  Boolean vertical   If true, ship is placed vertically, horizontal otherwise.
- * @return Boolean            True if the ship was placed, false otherwise.
+ * @param  Boolean vertical  If true, ship is placed vertically, horizontal otherwise.
+ * @return Boolean           True if the ship was placed, false otherwise.
  */
 function addShip(gameBoard, shipLength, x, y, vertical) {
   var valid = false;
