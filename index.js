@@ -80,7 +80,7 @@ function onEventReceived(api, err, message) {
         g.gameID = 17;
         g.threadID = message.threadID;
 
-        api.sendMessage("Your game ID is " + g.gameID + " and your bored looks like " + g.playerGameBoard, message.threadID);
+        api.sendMessage("Your game ID is " + g.gameID + " and your board looks like " + g.playerGameBoard, message.threadID);
         console.log(g);
       }
 
