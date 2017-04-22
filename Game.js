@@ -10,6 +10,9 @@ function Game(fbUserID, fbThreadID, fbAPI, id) {
   this.id = id;
   this.gameBoard = this.createGameBoard();
   this.gameBoardCPU = this.createGameBoard();
+  this.turn = 0
+  this.adjacentHits = 0;
+  this.guesses = {};
 }
 
 /**
@@ -146,7 +149,7 @@ method.addComputerShip = function(length) {
  * @param String    name        The name of the ship.
  * @param String    next        The name of the next ship. If undefined, the game begins after successful placement.
  */
-Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
+method.addPlayerShip = function(x, y, orientation, length, name, next) {
   var ship = this.addShip(this.gameBoard, length, x, y, orientation); // See if it works!
   if(ship) {
     if(next) {
@@ -165,41 +168,25 @@ Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
 
 /**
  * Processes the last message received, and updates the game state accordingly.
- * @param  Object message Contains metadata for a message such as date, time, and body.
+ * @param  Object   message     Contains metadata for a message such as date, time, and body.
  */
-Game.prototype.messageReceive = function(message) {
-<<<<<<< HEAD
-  if(this.started) {
-    var messageSplit = message.split(" ");
-    var x = parseInt(messageSplit[0].charAt(0));
-    var y = parseInt(messageSplit[0].charAt(1));
-    if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
-      this.gameBoardCPU[x][y] = 'M'
-      this.fbAPI.sendMessage('Miss!', this.fbThreadID);
-    //  this.aiTurn();
-    } else if (this.gameBoardCPU[x][y] == 'H' || this.gameBoardCPU[x][y] == 'M'){
-      this.fbAPI.sendMessage('You already guessed there.\nTry again!', this.fbThreadID);
-    } else {
-      //TODO: make function to recognize whether this is a sinking hit or not
-      this.gameBoardCPU[x][y] = 'H'
-      this.fbAPI.sendMessage('Hit!', this.fbThreadID);
-    //  this.aiTurn();
-=======
+method.messageReceive = function(message) {
   if(this.isStarted) {
     if(message != NaN && !isNaN(message)) {
       var x = parseInt(message.charAt(0));
       var y = parseInt(message.charAt(1));
-      if (this.gameBoardCPU[x][y] != 0) { //Piece of ship at (x,y)
+      if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
+        this.gameBoardCPU[x][y] = 'M'
+        this.fbAPI.sendMessage('Miss!', this.fbThreadID);
+        this.aiTurn();
+      } else if (this.gameBoardCPU[x][y] == 'H' || this.gameBoardCPU[x][y] == 'M'){
+        this.fbAPI.sendMessage('You already guessed there.\nTry again!', this.fbThreadID);
+      } else {
         //TODO: make function to recognize whether this is a sinking hit or not
         this.gameBoardCPU[x][y] = 'H'
         this.fbAPI.sendMessage('Hit!', this.fbThreadID);
         this.aiTurn();
-      } else {
-        this.gameBoardCPU[x][y] = 'M'
-        this.fbAPI.sendMessage('Miss!', this.fbThreadID);
-        this.aiTurn();
       }
->>>>>>> 7e7317f6b61109e7c6fb1263c2987ca905f8030a
     }
   } else {
     var messageSplit = message.split(' ');
@@ -223,15 +210,56 @@ Game.prototype.messageReceive = function(message) {
 /**
  * Takes the computer's turn against the human player
  */
-Game.prototype.aiTurn = function() {
-  //TODO: Make ai's turn
+method.aiTurn = function() {
+  // if (this.adjacentHits == 1) {
+  //   var current = this.turn -1;
+  //   while (guesses[current].charAt(3) != 'H') {
+  //     current--;
+  //   }
+  //   var x = guesses[current].charAt(0);
+  //   var y = guesses[current].charAt(1);
+  //   if (gameBoard[x][y + 1] != 'M')
+  // }
+
+  var validGuess = false;
+  while (!validGuess) {
+    var guessX = new Random(0, Constants.GAME_BOARD_SIZE - 1);
+    var guessY = new Random(0, Constants.GAME_BOARD_SIZE - 1);
+    validGuess = this.aiGuess(guessX, guessY, validGuess);
+  }
+};
+
+/**
+ * Takes a given (x,y) coordinate and determines whether it is a hit or missed
+ * @param Number    guessX            X coordinate of AI's guess.
+ * @param Number    guessY            Y coordinate of AI's guess.
+ * @param Boolean   validGuess        Validity of coordinates
+ */
+method.aiGuess = function(guessX, guessY, validGuess) {
+  if (gameBoard[guessX][guessY] == 0) {
+    validGuess = true;
+    this.fbAPI.sendMessage(guessX + '' + guessY + '\nI missed!', this.threadID);
+    this.guesses[this.turn] = guessX + '' + guessY + 'M';
+    this.gameBoard[guessX][guessY] = 'M';
+    this.turn++;
+    this.fbAPI.sendMessage('Your turn.', this.threadID);
+  }
+  else if (gameBoard[guessX][guessY] != 0 && gameBoard[guessX][guessY] != 'H' && gameBoard[guessX][guessY] != 'M') {
+    validGuess = true;
+    this.fbAPI.sendMessage(guessX + '' + guessY + '\nA hit!', this.threadID);
+    this.guesses[this.turn] = guessX + '' + guessY + 'H';
+    this.gameBoard[guessX][guessY] = 'H';
+    this.turn++;
+    this.fbAPI.sendMessage('Your turn.', this.threadID);
+  }
+  return (validGuess);
 };
 
 /**
  * Sends a copy of the given board to the Facebook thread.
  * @param Object The board to send.
  */
-Game.prototype.sendBoard = function(gameBoard) {
+method.sendBoard = function(gameBoard) {
   var board = '';
   for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
     board = board.concat(gameBoard[i] + '\r\n'); // Check row by row.
