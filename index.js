@@ -68,8 +68,6 @@ function onMessageReceived(api, message) {
     var game = games[message.senderID];
     if(game) {
       game.messageReceive(message.body);
-    } else {
-      api.sendMessage(Constants.MESSAGE_HELP, message.threadID);
     }
   }
 }
