@@ -117,6 +117,7 @@ method.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
+  this.sendBoard(this.gameBoard);
   this.fbAPI.sendMessage('Please place your carrier.', this.fbThreadID);
 };
 
@@ -149,6 +150,7 @@ Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
   var ship = this.addShip(this.gameBoard, length, x, y, orientation); // See if it works!
   if(ship) {
     if(next) {
+      this.sendBoard(this.gameBoard);
       this.fbAPI.sendMessage('Please place your ' + next + '.', this.fbThreadID); // Successful, prompt for next.
     } else {
       this.sendBoard(this.gameBoard);
@@ -167,7 +169,7 @@ Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
  */
 Game.prototype.messageReceive = function(message) {
   if(this.started) {
-    var messageSplit = message.split(' ');
+    var messageSplit = message.split(" ");
     var x = parseInt(messageSplit[0].charAt(0));
     var y = parseInt(messageSplit[0].charAt(1));
     if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
