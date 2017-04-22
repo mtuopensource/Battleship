@@ -1,3 +1,4 @@
+// Test
 module.exports = {
   FILE_PREFS: '/secrets.env',
   FILE_DB:    'games.sqlite',
