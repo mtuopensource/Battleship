@@ -168,19 +168,21 @@ Game.prototype.addPlayerShip = function(x, y, orientation, length, name, next) {
  * @param  Object message Contains metadata for a message such as date, time, and body.
  */
 Game.prototype.messageReceive = function(message) {
-  if(this.started) {
-    var messageSplit = message.split(" ");
-    var x = parseInt(messageSplit[0].charAt(0));
-    var y = parseInt(messageSplit[0].charAt(1));
-    if (this.gameBoardCPU[x][y] != 0) {                 //Piece of ship at (x,y)
-      //TODO: make function to recognize whether this is a sinking hit or not
-      this.gameBoardCPU[x][y] = 'H'
-      this.fbAPI.sendMessage('Hit!', this.fbThreadID);
-      this.aiTurn();
-    } else {
-      this.gameBoardCPU[x][y] = 'M'
-      this.fbAPI.sendMessage('Miss!', this.fbThreadID);
-      this.aiTurn();
+  if(this.isStarted) {
+    if(message != NaN && !isNan(message.body)) {
+      var messageSplit = message.split(" ");
+      var x = parseInt(messageSplit[0].charAt(0));
+      var y = parseInt(messageSplit[0].charAt(1));
+      if (this.gameBoardCPU[x][y] != 0) {                 //Piece of ship at (x,y)
+        //TODO: make function to recognize whether this is a sinking hit or not
+        this.gameBoardCPU[x][y] = 'H'
+        this.fbAPI.sendMessage('Hit!', this.fbThreadID);
+        this.aiTurn();
+      } else {
+        this.gameBoardCPU[x][y] = 'M'
+        this.fbAPI.sendMessage('Miss!', this.fbThreadID);
+        this.aiTurn();
+      }
     }
   } else {
     var messageSplit = message.split(' ');
