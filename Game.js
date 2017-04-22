@@ -170,15 +170,17 @@ Game.prototype.messageReceive = function(message) {
     var messageSplit = message.split(' ');
     var x = parseInt(messageSplit[0].charAt(0));
     var y = parseInt(messageSplit[0].charAt(1));
-    if (this.gameBoardCPU[x][y] != 0) {                 //Piece of ship at (x,y)
+    if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
+      this.gameBoardCPU[x][y] = 'M'
+      this.fbAPI.sendMessage('Miss!', this.fbThreadID);
+    //  this.aiTurn();
+    } else if (this.gameBoardCPU[x][y] == 'H' || this.gameBoardCPU[x][y] == 'M'){
+      this.fbAPI.sendMessage('You already guessed there.\nTry again!', this.fbThreadID);
+    } else {
       //TODO: make function to recognize whether this is a sinking hit or not
       this.gameBoardCPU[x][y] = 'H'
       this.fbAPI.sendMessage('Hit!', this.fbThreadID);
-      this.aiTurn();
-    } else {
-      this.gameBoardCPU[x][y] = 'M'
-      this.fbAPI.sendMessage('Miss!', this.fbThreadID);
-      this.aiTurn();
+    //  this.aiTurn();
     }
   } else {
     var messageSplit = message.split(' ');
