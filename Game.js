@@ -156,6 +156,7 @@ method.addPlayerShip = function(x, y, orientation, length, name, next) {
     } else {
       this.fbAPI.sendMessage(this.sendBoard(this.gameBoard) + 'You go first!', this.fbThreadID); // Successful, game can start now.
       this.isStarted = true;
+      console.log(this.gameBoardCPU);
     }
   } else {
     this.fbAPI.sendMessage('Invalid coordinates, please place your ' + name + '.', this.fbThreadID); // Bad position given.
@@ -170,19 +171,26 @@ method.addPlayerShip = function(x, y, orientation, length, name, next) {
 method.messageReceive = function(message) {
   if(this.isStarted) {
     if(message != NaN && !isNaN(message)) {
-      var x = parseInt(message.charAt(0));
-      var y = parseInt(message.charAt(1));
-      if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
-        this.gameBoardCPU[x][y] = 'M'
-        this.fbAPI.sendMessage('Miss!', this.fbThreadID);
-        this.aiTurn();
-      } else if (this.gameBoardCPU[x][y] == 'H' || this.gameBoardCPU[x][y] == 'M'){
-        this.fbAPI.sendMessage('You already guessed there.\nTry again!', this.fbThreadID);
+      if (message.length >= 2) {
+        var x = parseInt(message.charAt(0));
+        var y = parseInt(message.charAt(1));
+        if (this.gameBoardCPU[x][y] == 0) {                 //Piece of ship at (x,y)
+          this.gameBoardCPU[x][y] = 'M'
+          //this.fbAPI.sendMessage('Miss!', this.fbThreadID);
+          this.aiTurn("You Missed!");
+        } else if (this.gameBoardCPU[x][y] == 'H' || this.gameBoardCPU[x][y] == 'M'){
+          this.fbAPI.sendMessage('You already guessed there.\nTry again!', this.fbThreadID);
+        } else if (this.gameBoardCPU[x][y] != 0 && this.gameBoardCPU[x][y] != 'H' && this.gameBoardCPU[x][y] != 'M'){
+          //TODO: make function to recognize whether this is a sinking hit or not
+          this.gameBoardCPU[x][y] = 'H'
+          //this.fbAPI.sendMessage('Hit!', this.fbThreadID);
+          this.aiTurn("You Hit!");
+        } else {
+          this.fbAPI.sendMessage('Invalid input, try again.', this.fbThreadID);
+        }
       } else {
-        //TODO: make function to recognize whether this is a sinking hit or not
-        this.gameBoardCPU[x][y] = 'H'
-        this.fbAPI.sendMessage('Hit!', this.fbThreadID);
-        this.aiTurn();
+        console.log("Length is less than two");
+        this.fbAPI.sendMessage('Invalid input, try again.', this.fbThreadID);
       }
     }
   } else {
@@ -207,7 +215,7 @@ method.messageReceive = function(message) {
 /**
  * Takes the computer's turn against the human player
  */
-method.aiTurn = function() {
+method.aiTurn = function(hitOrMiss) {
   // if (this.adjacentHits == 1) {
   //   var current = this.turn -1;
   //   while (guesses[current].charAt(3) != 'H') {
@@ -217,12 +225,12 @@ method.aiTurn = function() {
   //   var y = guesses[current].charAt(1);
   //   if (gameBoard[x][y + 1] != 'M')
   // }
-
+  console.log("In aiTurn");
   var validGuess = false;
   while (!validGuess) {
-    var guessX = new Random(0, Constants.GAME_BOARD_SIZE - 1);
-    var guessY = new Random(0, Constants.GAME_BOARD_SIZE - 1);
-    validGuess = this.aiGuess(guessX, guessY, validGuess);
+    var guessX = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
+    var guessY = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
+    validGuess = this.aiGuess(guessX, guessY, validGuess,hitOrMiss);
   }
 };
 
@@ -232,23 +240,26 @@ method.aiTurn = function() {
  * @param Number    guessY            Y coordinate of AI's guess.
  * @param Boolean   validGuess        Validity of coordinates
  */
-method.aiGuess = function(guessX, guessY, validGuess) {
-  if (gameBoard[guessX][guessY] == 0) {
+method.aiGuess = function(guessX, guessY, validGuess,hitOrMiss) {
+  console.log("In aiGuess");
+  if (this.gameBoard[guessX][guessY] == 0) {
+    console.log("In the if of aiGuess");
     validGuess = true;
-    this.fbAPI.sendMessage(guessX + '' + guessY + '\nI missed!', this.threadID);
+    console.log(validGuess);
+    this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nI missed! \nYour turn.', this.fbThreadID);
     this.guesses[this.turn] = guessX + '' + guessY + 'M';
     this.gameBoard[guessX][guessY] = 'M';
     this.turn++;
-    this.fbAPI.sendMessage('Your turn.', this.threadID);
   }
-  else if (gameBoard[guessX][guessY] != 0 && gameBoard[guessX][guessY] != 'H' && gameBoard[guessX][guessY] != 'M') {
+  else if (this.gameBoard[guessX][guessY] != 0 && this.gameBoard[guessX][guessY] != 'H' && this.gameBoard[guessX][guessY] != 'M') {
+    console.log("In the elif of aiGuess");
     validGuess = true;
-    this.fbAPI.sendMessage(guessX + '' + guessY + '\nA hit!', this.threadID);
+    this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nIt\'s a hit! \nYour turn!', this.fbThreadID);
     this.guesses[this.turn] = guessX + '' + guessY + 'H';
     this.gameBoard[guessX][guessY] = 'H';
     this.turn++;
-    this.fbAPI.sendMessage('Your turn.', this.threadID);
   }
+  console.log("At the end of aiGuess");
   return (validGuess);
 };
 
