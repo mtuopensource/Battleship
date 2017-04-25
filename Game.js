@@ -189,7 +189,6 @@ method.messageReceive = function(message) {
           this.fbAPI.sendMessage('Invalid input, try again.', this.fbThreadID);
         }
       } else {
-        console.log("Length is less than two");
         this.fbAPI.sendMessage('Invalid input, try again.', this.fbThreadID);
       }
     }
@@ -225,7 +224,7 @@ method.aiTurn = function(hitOrMiss) {
   //   var y = guesses[current].charAt(1);
   //   if (gameBoard[x][y + 1] != 'M')
   // }
-  console.log("In aiTurn");
+
   var validGuess = false;
   while (!validGuess) {
     var guessX = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
@@ -241,25 +240,20 @@ method.aiTurn = function(hitOrMiss) {
  * @param Boolean   validGuess        Validity of coordinates
  */
 method.aiGuess = function(guessX, guessY, validGuess,hitOrMiss) {
-  console.log("In aiGuess");
   if (this.gameBoard[guessX][guessY] == 0) {
-    console.log("In the if of aiGuess");
     validGuess = true;
-    console.log(validGuess);
     this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nI missed! \nYour turn.', this.fbThreadID);
     this.guesses[this.turn] = guessX + '' + guessY + 'M';
     this.gameBoard[guessX][guessY] = 'M';
     this.turn++;
   }
   else if (this.gameBoard[guessX][guessY] != 0 && this.gameBoard[guessX][guessY] != 'H' && this.gameBoard[guessX][guessY] != 'M') {
-    console.log("In the elif of aiGuess");
     validGuess = true;
     this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nIt\'s a hit! \nYour turn!', this.fbThreadID);
     this.guesses[this.turn] = guessX + '' + guessY + 'H';
     this.gameBoard[guessX][guessY] = 'H';
     this.turn++;
   }
-  console.log("At the end of aiGuess");
   return (validGuess);
 };
 
