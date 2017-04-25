@@ -10,9 +10,14 @@ function Game(fbUserID, fbThreadID, fbAPI, id) {
   this.id = id;
   this.gameBoard = this.createGameBoard();
   this.gameBoardCPU = this.createGameBoard();
-  this.turn = 0
-  this.adjacentHits = 0;
-  this.guesses = {};
+  //this.turn = 0
+  //this.adjacentHits = 0;
+  //this.guesses = {};
+  this.direction = 0;
+  this.hits = new Array(3);
+  this.lastHit = null;
+  this.secondLastHit == null;
+  this.thirdLast
 }
 
 /**
@@ -215,6 +220,7 @@ method.messageReceive = function(message) {
  * Takes the computer's turn against the human player
  */
 method.aiTurn = function(hitOrMiss) {
+  var validGuess = false;
   // if (this.adjacentHits == 1) {
   //   var current = this.turn -1;
   //   while (guesses[current].charAt(3) != 'H') {
@@ -224,12 +230,39 @@ method.aiTurn = function(hitOrMiss) {
   //   var y = guesses[current].charAt(1);
   //   if (gameBoard[x][y + 1] != 'M')
   // }
+  if (this.hits[0] != null) {
+    var x = parseInt(this.hits[0].charAt(0));
+    var y = parseInt(this.hits[0].charAt(1));
+    while (!validGuess) {
+      switch (this.direction) {
+        case 0:
+          if (y != 0) y = y - 1;
+          else this.direction = 2;
+          break;
+        case 1:
+          if (x != 9) x = x + 1;
+          else this.direction = 3;
+          break;
+        case 2:
+          if (y != 9) y = y + 1;
+          else this.direction = 0;
+          break;
+        case 3:
+          if (x != 0) x = x - 1;
+          else this.direction = 1;
+          break;
+    }
+      validGuess = this.aiGuess(x, y, validGuess, hitOrMiss);
+      if (!validGuess) this.direction = (this.direction + 1) % 4;
+  }
+  } else if (this.hits[0] == null && this.hits[1] != null) {
 
-  var validGuess = false;
-  while (!validGuess) {
-    var guessX = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
-    var guessY = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
-    validGuess = this.aiGuess(guessX, guessY, validGuess,hitOrMiss);
+  } else {
+    while (!validGuess) {
+      var guessX = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
+      var guessY = Random.getRandomInt(0, Constants.GAME_BOARD_SIZE - 1);
+      validGuess = this.aiGuess(guessX, guessY, validGuess, hitOrMiss);
+    }
   }
 };
 
@@ -239,20 +272,27 @@ method.aiTurn = function(hitOrMiss) {
  * @param Number    guessY            Y coordinate of AI's guess.
  * @param Boolean   validGuess        Validity of coordinates
  */
-method.aiGuess = function(guessX, guessY, validGuess,hitOrMiss) {
+method.aiGuess = function(guessX, guessY, validGuess, hitOrMiss) {
   if (this.gameBoard[guessX][guessY] == 0) {
     validGuess = true;
     this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nI missed! \nYour turn.', this.fbThreadID);
-    this.guesses[this.turn] = guessX + '' + guessY + 'M';
+    //this.guesses[this.turn] = guessX + '' + guessY + 'M';
     this.gameBoard[guessX][guessY] = 'M';
-    this.turn++;
+    //this.turn++;
+    this.hits[2] = this.hits[1];
+    this.hits[1] = this.hits[0];
+    this.hits[0] = null;
   }
   else if (this.gameBoard[guessX][guessY] != 0 && this.gameBoard[guessX][guessY] != 'H' && this.gameBoard[guessX][guessY] != 'M') {
     validGuess = true;
     this.fbAPI.sendMessage(hitOrMiss + "\nI guessed " +guessX + '' + guessY + '\nIt\'s a hit! \nYour turn!', this.fbThreadID);
-    this.guesses[this.turn] = guessX + '' + guessY + 'H';
+    //this.guesses[this.turn] = guessX + '' + guessY + 'H';
     this.gameBoard[guessX][guessY] = 'H';
-    this.turn++;
+    //this.turn++;
+    //sets 2nd last hi equal to null if last hit was null otherwise, equal to last hit
+    this.hits[2] = this.hits[1];
+    this.hits[1] = this.hits[0];
+    this.hits[0] = guessX + '' + guessY;
   }
   return (validGuess);
 };
