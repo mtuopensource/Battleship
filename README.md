@@ -6,6 +6,9 @@ The bot was built using Node v6.10.2 and npm v3.10.10. We assume you have these 
 You must have the Facebook account/page setup accordingly, in no way are we responsible if your page gets banned for spamming messages, logging in and out too quickly, or any other problem.
 
 # Installation
+
+If you've already installed the bot, but are looking how to start the bot again, skip to step 6
+
 1.  Clone the repo to your local machine
 2.  Create a file in the root directory called secrets.env
 3.  Insert into secrets.env:
@@ -14,5 +17,5 @@ You must have the Facebook account/page setup accordingly, in no way are we resp
 
     fbPass=(password)
 4.  Navigate to the root directory of the project and run "npm install"
-5.  Run node createDB.js
+5.  Run node createDB.js (only needs to happen once)
 6.  Run node index.js
