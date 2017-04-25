@@ -9,8 +9,10 @@ You must have the Facebook account/page setup accordingly, in no way are we resp
 1.  Clone the repo to your local machine
 2.  Create a file in the root directory called secrets.env
 3.  Insert into secrets.env:
-  fbUser=(email)
-  fbPass=(password)
+
+    fbUser=(email)
+
+    fbPass=(password)
 4.  Navigate to the root directory of the project and run "npm install"
 5.  Run node createDB.js
 6.  Run node index.js
