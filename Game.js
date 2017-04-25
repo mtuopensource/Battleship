@@ -120,8 +120,7 @@ method.beginGame = function() {
   this.addComputerShip(3);
   this.addComputerShip(3);
   this.addComputerShip(2);
-  this.sendBoard(this.gameBoard);
-  this.fbAPI.sendMessage('Please place your carrier.', this.fbThreadID);
+  this.fbAPI.sendMessage(this.sendBoard(this.gameBoard) + 'Please place your carrier.', this.fbThreadID);
 };
 
 /**
@@ -153,11 +152,9 @@ method.addPlayerShip = function(x, y, orientation, length, name, next) {
   var ship = this.addShip(this.gameBoard, length, x, y, orientation); // See if it works!
   if(ship) {
     if(next) {
-      this.sendBoard(this.gameBoard);
-      this.fbAPI.sendMessage('Please place your ' + next + '.', this.fbThreadID); // Successful, prompt for next.
+      this.fbAPI.sendMessage(this.sendBoard(this.gameBoard) + 'Please place your ' + next + '.', this.fbThreadID); // Successful, prompt for next.
     } else {
-      this.sendBoard(this.gameBoard);
-      this.fbAPI.sendMessage('You go first!', this.fbThreadID); // Successful, game can start now.
+      this.fbAPI.sendMessage(this.sendBoard(this.gameBoard) + 'You go first!', this.fbThreadID); // Successful, game can start now.
       this.isStarted = true;
     }
   } else {
@@ -264,7 +261,7 @@ method.sendBoard = function(gameBoard) {
   for(var i = 0; i < Constants.GAME_BOARD_SIZE; i++) {
     board = board.concat(gameBoard[i] + '\r\n'); // Check row by row.
   }
-  this.fbAPI.sendMessage(board, this.fbThreadID);
+  return board;
 };
 
 module.exports = Game;
