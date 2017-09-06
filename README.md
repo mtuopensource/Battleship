@@ -6,7 +6,7 @@ A Facebook chatbot that plays a text-based version of Battleship.
 * You must have a Facebook account defined in secrets.env. See the installation instructions for more details. This chatbot is highly experimental and could send messages or login too quickly. **We are not responsible if your account gets suspended, terminated, banned, or otherwise limited.**
 
 # Installation
-If you've already installed the bot, proceed to step 6
+If you've already installed the bot, proceed to step 7
 
 1. Clone the repository to your local machine
 2. Create a file in the root directory called secrets.env
