@@ -13,6 +13,7 @@ If you've already installed the bot, proceed to step 6
 3. Define a Facebook account in secrets.env:
    >fbUser=(email)  
    >fbPass=(password)
+   
 4. Open a terminal and navigate to the root directory of the project
 5. Run `npm install`
 6. Run `node createDB.js` (this only needs to happen once)
