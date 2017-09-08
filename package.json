@@ -1,8 +1,8 @@
 {
   "name": "Battleship",
   "version": "1.0.0",
-  "description": "A chat bot which plays Battleship.",
-  "main": "index.js",
+  "description": "A Facebook chatbot that plays a text-based version of Battleship.",
+  "main": "Battleship.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
